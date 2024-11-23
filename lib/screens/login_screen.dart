@@ -54,22 +54,45 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               const Text(
-                'Iniciar sesión',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                'Bienvenido',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.black54,
+                ),
+                textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
               MyTextField(
                 controller: usernameController,
-                hintText: 'Usuario',
+                hintText: 'Correo electrónico',
                 obscureText: false,
+                borderRadius: 10.0,
               ),
               const SizedBox(height: 20),
               MyTextField(
                 controller: passwordController,
                 hintText: 'Contraseña',
                 obscureText: true,
+                borderRadius: 10.0,
+              ),
+              const SizedBox(height: 10),
+              Align(
+                alignment: Alignment.centerRight,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pushNamed(context, '/forgot-password');
+                  },
+                  child: const Text(
+                    '¿Olvidaste tu contraseña?',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.blue,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                ),
               ),
               const SizedBox(height: 20),
               isLoading
@@ -82,16 +105,46 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderRadius: 12.0,
                     ),
               const SizedBox(height: 20),
+              const Divider(
+                thickness: 1,
+                color: Colors.grey,
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                'O continuar con',
+                style: TextStyle(fontSize: 14, color: Colors.black54),
+              ),
+              const SizedBox(height: 10),
               GestureDetector(
-                onTap: () => Navigator.pushNamed(context, '/register'),
-                child: const Text(
-                  '¿No tienes cuenta? Regístrate',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.blue,
-                    decoration: TextDecoration.underline,
-                  ),
+                onTap: () {
+               
+                },
+                child: Image.asset(
+                  'lib/assets/images/googleicon.png',
+                  height: 50,
+                  width: 50,
                 ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    '¿No tienes cuenta?',
+                    style: TextStyle(fontSize: 14),
+                  ),
+                  GestureDetector(
+                    onTap: () => Navigator.pushNamed(context, '/register'),
+                    child: const Text(
+                      ' Regístrate',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.blue,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
