@@ -16,7 +16,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
-  // Lista de pantallas para el BottomNavigationBar
   final List<Widget> _screens = [
     const ScheduleScreen(),
     const ForumScreen(),

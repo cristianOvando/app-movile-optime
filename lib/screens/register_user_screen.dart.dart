@@ -4,21 +4,21 @@ import '../components/my_textfield.dart';
 import '../utils/helpers.dart';
 import '../services/auth_service.dart';
 
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+class RegisterUserScreen extends StatefulWidget {
+  const RegisterUserScreen({super.key});
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  State<RegisterUserScreen> createState() => _RegisterUserScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _RegisterUserScreenState extends State<RegisterUserScreen> {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   bool isLoading = false;
 
   final String contactId = "1"; 
 
-  void register() async {
+  void registerUser() async {
     setState(() => isLoading = true);
 
     final result = await AuthService.register(
@@ -32,10 +32,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (result != null) {
       Navigator.pushNamed(context, '/');
     } else {
-      Helpers.showErrorDialog(
-        context,
-        'Error al registrarse. Verifica los datos ingresados.',
-      );
+      Helpers.showErrorDialog(context, 'Error al registrar al usuario.');
     }
   }
 
@@ -46,26 +43,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Text(
-                'OPTIME',
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 22, 123, 206),
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Registro',
+                'Crear Usuario',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
               MyTextField(
                 controller: usernameController,
-                hintText: 'Usuario',
+                hintText: 'Nombre de Usuario',
                 obscureText: false,
               ),
               const SizedBox(height: 20),
@@ -78,24 +64,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
               isLoading
                   ? const CircularProgressIndicator()
                   : MyButton(
-                      onTap: register,
+                      onTap: registerUser,
                       buttonText: 'Registrar',
                       width: double.infinity,
                       height: 50.0,
-                      borderRadius: 12.0,
                     ),
-              const SizedBox(height: 20),
-              GestureDetector(
-                onTap: () => Navigator.pushNamed(context, '/'),
-                child: const Text(
-                  '¿Ya tienes cuenta? Inicia sesión',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.blue,
-                    decoration: TextDecoration.underline,
-                  ),
-                ),
-              ),
             ],
           ),
         ),

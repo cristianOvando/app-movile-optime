@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:optime/screens/create_contact_screen.dart';
 import 'package:optime/screens/login_screen.dart';
-import 'package:optime/screens/register_screen.dart';
+import 'package:optime/screens/register_user_screen.dart.dart';
 import 'package:optime/screens/home_screen.dart';
 import 'package:optime/screens/schedule_screen.dart';
 import 'package:optime/screens/forum_screen.dart';
 import 'package:optime/screens/chatbot_screen.dart';
 import 'package:optime/screens/calendar_screen.dart';
+import 'package:optime/screens/validate_code_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -22,7 +24,9 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => const LoginScreen(),
-        '/register': (context) => const RegisterScreen(),
+        '/create-contact': (context) => const CreateContactScreen(),
+        '/validate-code': (context) => const ValidateCodeScreen(),
+        '/register-user': (context) => const RegisterUserScreen(),
         '/home': (context) => const HomeScreen(),
         '/schedule': (context) => const ScheduleScreen(),
         '/forum': (context) => const ForumScreen(),
