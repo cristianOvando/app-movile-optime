@@ -9,7 +9,6 @@ import 'package:optime/screens/forum_screen.dart';
 import 'package:optime/screens/chatbot_screen.dart';
 import 'package:optime/screens/calendar_screen.dart';
 import 'package:optime/screens/settings_screen.dart';
-import 'package:optime/screens/statistics_screen.dart';
 import 'package:optime/screens/timer_screen.dart';
 import 'package:optime/screens/validate_code_screen.dart';
 
@@ -34,7 +33,6 @@ class MyApp extends StatelessWidget {
         '/': (context) => const HomeScreen(),
         '/Timer': (context) => const TimerScreen(),
         '/Settings': (context) => const SettingsScreen(),
-        '/statics': (context) => const StatisticsScreen(),
         '/schedule': (context) => const ScheduleScreen(),
         '/forum': (context) => const ForumScreen(),
         '/chatbot': (context) => const ChatbotScreen(),
