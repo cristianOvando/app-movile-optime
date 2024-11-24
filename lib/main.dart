@@ -23,11 +23,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false, 
       initialRoute: '/',
       routes: {
-        '/': (context) => const LoginScreen(),
+        '/login': (context) => const LoginScreen(),
         '/create-contact': (context) => const CreateContactScreen(),
         '/validate-code': (context) => const ValidateCodeScreen(),
         '/register-user': (context) => const RegisterUserScreen(),
-        '/home': (context) => const HomeScreen(),
+        '/': (context) => const HomeScreen(),
         '/schedule': (context) => const ScheduleScreen(),
         '/forum': (context) => const ForumScreen(),
         '/chatbot': (context) => const ChatbotScreen(),

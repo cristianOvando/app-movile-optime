@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../components/my_button.dart';
-import '../components/my_textfield.dart';
-import '../utils/helpers.dart';
 import '../services/auth_service.dart';
+import '../utils/helpers.dart';
+import '../components/my_textfield.dart';
+import '../components/my_button.dart';
 
 class RegisterUserScreen extends StatefulWidget {
   const RegisterUserScreen({super.key});
@@ -17,8 +17,8 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
   bool isLoading = false;
 
   final String contactId = "1"; 
-
   void registerUser() async {
+    
     setState(() => isLoading = true);
 
     final result = await AuthService.register(
@@ -29,10 +29,25 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
 
     setState(() => isLoading = false);
 
-    if (result != null) {
-      Navigator.pushNamed(context, '/');
+    if (result != null && result['success'] == true) {
+      Helpers.showSuccessDialog(
+        context,
+        'Registro exitoso',
+        'El usuario fue registrado exitosamente.',
+        '/', 
+      );
+    } else if (result != null && result.containsKey('message')) {
+
+      Helpers.showErrorDialog(
+        context,
+        result['message'] ?? 'Error desconocido: ${result['error']}',
+      );
     } else {
-      Helpers.showErrorDialog(context, 'Error al registrar al usuario.');
+      
+      Helpers.showErrorDialog(
+        context,
+        'Error al registrar al usuario. Por favor, verifica tu conexión o los datos ingresados.',
+      );
     }
   }
 
@@ -43,15 +58,21 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Text(
-                'Crear Usuario',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                'Registro de Usuario',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Color.fromARGB(255, 22, 123, 206),
+                ),
+                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20),
               MyTextField(
                 controller: usernameController,
-                hintText: 'Nombre de Usuario',
+                hintText: 'Nombre de usuario',
                 obscureText: false,
               ),
               const SizedBox(height: 20),
@@ -68,6 +89,7 @@ class _RegisterUserScreenState extends State<RegisterUserScreen> {
                       buttonText: 'Registrar',
                       width: double.infinity,
                       height: 50.0,
+                      borderRadius: 12.0,
                     ),
             ],
           ),
