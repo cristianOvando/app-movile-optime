@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../components/my_button.dart';
-import '../components/my_textfield.dart';
-import '../utils/helpers.dart';
 import '../services/contact_service.dart';
+import '../utils/helpers.dart';
+import '../components/my_textfield.dart';
+import '../components/my_button.dart';
 
 class CreateContactScreen extends StatefulWidget {
   const CreateContactScreen({super.key});
@@ -19,22 +19,51 @@ class _CreateContactScreenState extends State<CreateContactScreen> {
   bool isLoading = false;
 
   void createContact() async {
+    if (emailController.text.isEmpty ||
+        nameController.text.isEmpty ||
+        lastNameController.text.isEmpty ||
+        phoneController.text.isEmpty) {
+      Helpers.showErrorDialog(
+        context,
+        'Todos los campos son obligatorios.',
+      );
+      return;
+    }
+
+    if (!RegExp(r'^[\w\.\-]+@[a-zA-Z0-9\-]+\.upchiapas\.edu\.mx$')
+        .hasMatch(emailController.text.trim())) {
+      Helpers.showErrorDialog(
+        context,
+        'El correo debe ser válido y terminar con @upchiapas.edu.mx.',
+      );
+      return;
+    }
+
     setState(() => isLoading = true);
 
     final result = await ContactService.createContact(
-      emailController.text,
-      nameController.text,
-      lastNameController.text,
-      phoneController.text,
+      emailController.text.trim(),
+      nameController.text.trim(),
+      lastNameController.text.trim(),
+      phoneController.text.trim(),
     );
 
     setState(() => isLoading = false);
 
-    if (result != null) {
-      
-      Navigator.pushNamed(context, '/validate-code', arguments: emailController.text);
+    if (result != null && result.containsKey('message')) {
+      Helpers.showSuccessDialog(
+        context,
+        'Contacto creado',
+        'Se envió un código a tu correo electrónico.',
+        '/validate-code',
+      );
     } else {
-      Helpers.showErrorDialog(context, 'Error al crear el contacto. Verifica los datos ingresados.');
+      Helpers.showErrorDialog(
+        context,
+        result != null && result.containsKey('message')
+            ? result['message']
+            : 'Error desconocido: ${result?['error'] ?? 'Sin detalles del error'}',
+      );
     }
   }
 
@@ -45,10 +74,16 @@ class _CreateContactScreenState extends State<CreateContactScreen> {
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Text(
                 'Crear Contacto',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue,
+                ),
+                textAlign: TextAlign.center,
               ),
               const SizedBox(height: 20),
               MyTextField(
@@ -81,7 +116,8 @@ class _CreateContactScreenState extends State<CreateContactScreen> {
                       onTap: createContact,
                       buttonText: 'Siguiente',
                       width: double.infinity,
-                      height: 50.0,
+                      height: 50,
+                      borderRadius: 12.0,
                     ),
             ],
           ),

@@ -17,14 +17,44 @@ class _ValidateCodeScreenState extends State<ValidateCodeScreen> {
   void validateCode() async {
     setState(() => isLoading = true);
 
-    await Future.delayed(const Duration(seconds: 1)); 
+    // Simula una validación exitosa del código
+    await Future.delayed(const Duration(seconds: 1));
     setState(() => isLoading = false);
 
     if (codeController.text == '123456') {
-      Navigator.pushNamed(context, '/register-user');
+      _showSuccessDialog('Código válido', 'El código fue verificado correctamente.', '/register-user');
     } else {
       Helpers.showErrorDialog(context, 'Código inválido. Inténtalo de nuevo.');
     }
+  }
+
+  void _showSuccessDialog(String title, String content, String nextRoute) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Row(
+            children: [
+              const Icon(Icons.check_circle, color: Colors.blue, size: 30),
+              const SizedBox(width: 10),
+              Text(title, style: const TextStyle(color: Colors.blue)),
+            ],
+          ),
+          content: Text(content),
+          actions: [
+            MyButton(
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, nextRoute);
+              },
+              buttonText: 'Aceptar',
+              width: double.infinity,
+              borderRadius: 8.0,
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override

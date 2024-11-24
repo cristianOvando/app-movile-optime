@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class MyBottomNavBar extends StatelessWidget {
   final int selectedIndex;
@@ -40,8 +41,8 @@ class MyBottomNavBar extends StatelessWidget {
             label: 'Foro',
           ),
           BottomNavigationBarItem(
-            icon: _buildIcon(Icons.chat, 2),
-            label: 'ChatBot',
+             icon: _buildIcon(FontAwesomeIcons.robot, 2), 
+             label: 'ChatBot',
           ),
           BottomNavigationBarItem(
             icon: _buildIcon(Icons.calendar_today, 3),

@@ -23,7 +23,6 @@ class _HomeScreenState extends State<HomeScreen> {
     const CalendarScreen(),
   ];
 
-  // Método para manejar el cambio de pestañas
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -33,9 +32,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const MyAppBar(), // Usa el componente personalizado
+      appBar: const MyAppBar(), 
       body: IndexedStack(
-        index: _selectedIndex, // Muestra la pantalla correspondiente
+        index: _selectedIndex, 
         children: _screens,
       ),
       bottomNavigationBar: MyBottomNavBar(

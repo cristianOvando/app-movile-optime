@@ -31,7 +31,9 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       Helpers.showErrorDialog(
         context,
-        result?['message'] ?? 'Error al iniciar sesión. Verifica tus credenciales.',
+        result != null && result.containsKey('message')
+            ? result['message']
+            : 'Error desconocido: ${result?['error'] ?? 'Sin detalles del error'}',
       );
     }
   }
@@ -58,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const Text(
                 'Bienvenido',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 16,
                   color: Colors.black54,
                 ),
                 textAlign: TextAlign.center,
@@ -66,23 +68,21 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 30),
               MyTextField(
                 controller: usernameController,
-                hintText: 'Correo electrónico',
+                hintText: 'Correo electronico',
                 obscureText: false,
-                borderRadius: 10.0,
               ),
               const SizedBox(height: 20),
               MyTextField(
                 controller: passwordController,
                 hintText: 'Contraseña',
                 obscureText: true,
-                borderRadius: 10.0,
               ),
               const SizedBox(height: 10),
               Align(
                 alignment: Alignment.centerRight,
                 child: GestureDetector(
                   onTap: () {
-                    Navigator.pushNamed(context, '/forgot-password');
+                    Navigator.pushNamed(context, '/forgot-password'); 
                   },
                   child: const Text(
                     '¿Olvidaste tu contraseña?',
@@ -105,24 +105,32 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderRadius: 12.0,
                     ),
               const SizedBox(height: 20),
-              const Divider(
-                thickness: 1,
-                color: Colors.grey,
+              Row(
+                children: const [
+                  Expanded(child: Divider(color: Colors.grey)),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text('O continuar con'),
+                  ),
+                  Expanded(child: Divider(color: Colors.grey)),
+                ],
               ),
-              const SizedBox(height: 10),
-              const Text(
-                'O continuar con',
-                style: TextStyle(fontSize: 14, color: Colors.black54),
-              ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
               GestureDetector(
                 onTap: () {
-               
+                  // Agrega aquí la lógica para iniciar sesión con Google
                 },
-                child: Image.asset(
-                  'lib/assets/images/googleicon.png',
-                  height: 50,
-                  width: 50,
+                child: Container(
+                  padding: const EdgeInsets.all(12.0),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Image.asset(
+                    'lib/assets/images/googleicon.png', 
+                    height: 40,
+                    width: 40,
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -134,9 +142,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: TextStyle(fontSize: 14),
                   ),
                   GestureDetector(
-                    onTap: () => Navigator.pushNamed(context, '/register'),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/create-contact');
+                    },
                     child: const Text(
-                      ' Regístrate',
+                      ' Registro',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.blue,
