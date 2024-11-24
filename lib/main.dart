@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:optime/screens/create_contact_screen.dart';
 import 'package:optime/screens/login_screen.dart';
@@ -7,6 +8,9 @@ import 'package:optime/screens/schedule_screen.dart';
 import 'package:optime/screens/forum_screen.dart';
 import 'package:optime/screens/chatbot_screen.dart';
 import 'package:optime/screens/calendar_screen.dart';
+import 'package:optime/screens/settings_screen.dart';
+import 'package:optime/screens/statistics_screen.dart';
+import 'package:optime/screens/timer_screen.dart';
 import 'package:optime/screens/validate_code_screen.dart';
 
 void main() {
@@ -28,6 +32,9 @@ class MyApp extends StatelessWidget {
         '/validate-code': (context) => const ValidateCodeScreen(),
         '/register-user': (context) => const RegisterUserScreen(),
         '/': (context) => const HomeScreen(),
+        '/Timer': (context) => const TimerScreen(),
+        '/Settings': (context) => const SettingsScreen(),
+        '/statics': (context) => const StatisticsScreen(),
         '/schedule': (context) => const ScheduleScreen(),
         '/forum': (context) => const ForumScreen(),
         '/chatbot': (context) => const ChatbotScreen(),

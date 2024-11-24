@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../components/my_button.dart';
 
 class Helpers {
   static void showErrorDialog(BuildContext context, String message) {
@@ -9,9 +10,12 @@ class Helpers {
           title: const Text('Error', style: TextStyle(color: Colors.red)),
           content: Text(message),
           actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Aceptar'),
+            MyButton(
+              onTap: () => Navigator.pop(context),
+              buttonText: 'Aceptar',
+              width: double.infinity,
+              height: 50,
+              borderRadius: 12.0,
             ),
           ],
         );
@@ -19,7 +23,8 @@ class Helpers {
     );
   }
 
-  static void showSuccessDialog(BuildContext context, String title, String message, String nextRoute) {
+  static void showSuccessDialog(
+      BuildContext context, String title, String message, [String? nextRoute]) {
     showDialog(
       context: context,
       builder: (context) {
@@ -33,12 +38,17 @@ class Helpers {
           ),
           content: Text(message),
           actions: [
-            TextButton(
-              onPressed: () {
+            MyButton(
+              onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, nextRoute);
+                if (nextRoute != null) {
+                  Navigator.pushNamed(context, nextRoute);
+                }
               },
-              child: const Text('Aceptar'),
+              buttonText: 'Aceptar',
+              width: double.infinity,
+              height: 50,
+              borderRadius: 12.0,
             ),
           ],
         );
