@@ -87,10 +87,10 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
             Navigator.of(context).pop();
           },
         ),
-        centerTitle: true, // Centrar el título
+        centerTitle: true, 
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min, // Para que ocupe solo el espacio del contenido
+          mainAxisSize: MainAxisSize.min, 
           children: [
             Icon(
               Icons.bar_chart_rounded,
@@ -116,9 +116,8 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    // Gráfico
                     SizedBox(
-                      height: 600, 
+                      height: 670, 
                       child: SfCartesianChart(
                         zoomPanBehavior: ZoomPanBehavior(
                           enablePinching: true,
@@ -194,7 +193,7 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
                             ),
                             textAlign: TextAlign.center,
                           ),
-                          const SizedBox(height: 8.0), // Espacio entre las líneas
+                          const SizedBox(height: 8.0), 
                           Text(
                             formatPrediction(nextDayPrediction),
                             style: const TextStyle(
