@@ -55,3 +55,6 @@ pubspec.lock
 
 # Dart Analysis
 analysis_options.yaml
+
+# ApiKey
+lib/assets/config.json

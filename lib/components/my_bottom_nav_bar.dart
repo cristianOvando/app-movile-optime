@@ -13,7 +13,6 @@ class MyBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('Construyendo MyBottomNavBar');
     return Container(
       margin: const EdgeInsets.all(0),
       decoration: BoxDecoration(
@@ -23,7 +22,7 @@ class MyBottomNavBar extends StatelessWidget {
           topRight: Radius.circular(20),
         ),
         border: Border.all(
-          color: const Color.fromARGB(255, 133, 133, 133), 
+          color: const Color.fromARGB(255, 210, 210, 210), 
           width: 1, 
         ),
       ),

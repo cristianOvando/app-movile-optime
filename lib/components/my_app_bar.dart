@@ -19,7 +19,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
             bottomRight: Radius.circular(20),
           ),
           border: Border.all(
-            color: const Color.fromARGB(255, 200, 200, 200), 
+            color: const Color.fromARGB(255, 210, 210, 210), 
             width: 1.0, 
           ),
         ),
