@@ -32,7 +32,7 @@ class Helpers {
           title: Row(
             children: [
               const Icon(Icons.check_circle, color: Colors.blue, size: 30),
-              const SizedBox(width: 10),
+              const SizedBox(width: 5),
               Text(title, style: const TextStyle(color: Colors.blue)),
             ],
           ),
