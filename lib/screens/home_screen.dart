@@ -19,7 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _screens = [
     const ScheduleScreen(),
     const ForumScreen(),
-    const ChatbotScreen(),
+    const ChatbotPage(),
     const CalendarScreen(),
   ];
 
