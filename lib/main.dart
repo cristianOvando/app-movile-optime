@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
         '/Settings': (context) => const SettingsScreen(),
         '/schedule': (context) => const ScheduleScreen(),
         '/forum': (context) => const ForumScreen(),
-        '/chatbot': (context) => const ChatbotScreen(),
+        '/chatbot': (context) => const ChatbotPage(),
         '/calendar': (context) => const CalendarScreen(),
       },
     );
