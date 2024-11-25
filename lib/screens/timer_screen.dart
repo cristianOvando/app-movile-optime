@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class TimerScreen extends StatefulWidget {
@@ -16,6 +15,7 @@ class _TimerScreenState extends State<TimerScreen> {
   late Timer _timer;
   bool isRunning = false;
   int secondsElapsed = 0;
+  int totalTimeStudied = 0; 
 
   @override
   void dispose() {
@@ -39,36 +39,55 @@ class _TimerScreenState extends State<TimerScreen> {
       _timer.cancel();
       setState(() => isRunning = false);
 
-      final formattedTime = formatFullTime(secondsElapsed);
       final minutes = (secondsElapsed / 60).floor();
+      final formattedTime = formatFullTime(secondsElapsed);
 
+      if (minutes <= 0) {
+        showSnackBar(context, 'No se puede guardar un tiempo de estudio de 0 minutos.');
+        return;
+      }
       showDialog(
         context: context,
+        barrierDismissible: false, 
         builder: (context) {
           return AlertDialog(
-            backgroundColor: const Color(0xFF167BCE),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            title: const Text(
+              'Tiempo registrado',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF167BCE),
+              ),
+              textAlign: TextAlign.center,
+            ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.check_circle, size: 60, color: Colors.white),
+                const Icon(Icons.check_circle, size: 60, color: Colors.green),
                 const SizedBox(height: 10),
                 Text(
-                  'Has estudiado\n$formattedTime',
+                  'Has estudiado $formattedTime',
                   style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
                     fontSize: 18,
+                    color: Color.fromARGB(221, 0, 0, 0),
                   ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 10),
-                TextButton(
+                ElevatedButton(
                   onPressed: () async {
                     Navigator.pop(context);
-                    await saveStudyDataWithFeedback(1, minutes);
+                    await saveStudyData(1, minutes); 
                     resetTimer();
                   },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF167BCE),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
                   child: const Text(
                     'Aceptar',
                     style: TextStyle(color: Colors.white),
@@ -84,12 +103,13 @@ class _TimerScreenState extends State<TimerScreen> {
 
   void resetTimer() {
     setState(() {
+      totalTimeStudied += secondsElapsed; 
       secondsElapsed = 0;
       isRunning = false;
     });
   }
 
-  Future<void> saveStudyDataWithFeedback(int userId, int minutes) async {
+  Future<void> saveStudyData(int userId, int minutes) async {
     final date = DateTime.now().toIso8601String().split('T')[0];
     final studyData = {
       "user_id": userId,
@@ -97,59 +117,22 @@ class _TimerScreenState extends State<TimerScreen> {
       "date": date,
     };
 
-    String feedbackMessage;
-    Icon feedbackIcon;
+    print("Datos enviados: $studyData"); 
 
     try {
       final response = await sendStudyData(studyData);
 
       if (response.statusCode == 200) {
-        feedbackMessage = 'Datos guardados exitosamente.';
-        feedbackIcon = const Icon(Icons.check_circle, color: Colors.green, size: 60);
+        print("Respuesta del servidor: ${response.body}"); 
+        showSnackBar(context, 'Datos guardados exitosamente.');
       } else {
-        feedbackMessage = 'Error del servidor: ${response.body}';
-        feedbackIcon = const Icon(Icons.error, color: Colors.red, size: 60);
+        print("Error del servidor: ${response.body}");
+        showSnackBar(context, 'Error al guardar los datos: ${response.body}');
       }
     } catch (e) {
-      await saveDataLocally(studyData);
-      feedbackMessage = 'No se pudo conectar. Datos guardados localmente.';
-      feedbackIcon = const Icon(Icons.error, color: Colors.red, size: 60);
+      showSnackBar(context, 'Error de red. No se pudo enviar: $e');
+      print('Error al enviar datos: $e');
     }
-
-    // Mostrar un AlertDialog con el mensaje de feedback
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              feedbackIcon,
-              const SizedBox(height: 10),
-              Text(
-                feedbackMessage,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 10),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text(
-                  'Cerrar',
-                  style: TextStyle(color: Color(0xFF167BCE)),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
   }
 
   Future<http.Response> sendStudyData(Map<String, dynamic> studyData) async {
@@ -161,11 +144,18 @@ class _TimerScreenState extends State<TimerScreen> {
     );
   }
 
-  Future<void> saveDataLocally(Map<String, dynamic> studyData) async {
-    final prefs = await SharedPreferences.getInstance();
-    final pendingData = prefs.getStringList('pendingData') ?? [];
-    pendingData.add(jsonEncode(studyData));
-    await prefs.setStringList('pendingData', pendingData);
+  void showSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          textAlign: TextAlign.center,
+          style: const TextStyle(color: Colors.white),
+        ),
+        backgroundColor: const Color(0xFF167BCE),
+        duration: const Duration(seconds: 3),
+      ),
+    );
   }
 
   String formatFullTime(int seconds) {
@@ -178,29 +168,40 @@ class _TimerScreenState extends State<TimerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF9F9F9),
+      backgroundColor: Colors.white,
       appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back_ios_new,
-              color: Color(0xFF167BCE),
-            ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: Color(0xFF167BCE),
           ),
-          centerTitle: true,
-          title: const Text(
-            'Temporizador',
-            style: TextStyle(
-              color: Color(0xFF167BCE),
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
-          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
         ),
+        centerTitle: true,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: const [
+            Icon(
+              Icons.timer_rounded,
+              color: Color(0xFF167BCE),
+            ),
+            SizedBox(width: 8.0),
+            Text(
+              'Tiempo de estudio',
+              style: TextStyle(
+                color: Color(0xFF167BCE),
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            ),
+          ],
+        ),
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -214,19 +215,19 @@ class _TimerScreenState extends State<TimerScreen> {
                 style: const TextStyle(
                   fontSize: 48,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF4B97D5),
+                  color: Color.fromARGB(255, 37, 37, 37),
                 ),
               ),
-              progressColor: const Color(0xFF4B97D5),
-              backgroundColor: const Color(0xFFB5CEE3),
+              progressColor: const Color.fromARGB(255, 22, 123, 206),
+              backgroundColor: const Color.fromARGB(255, 255, 255, 255),
               circularStrokeCap: CircularStrokeCap.round,
             ),
             const SizedBox(height: 30),
             ElevatedButton(
               onPressed: isRunning ? stopTimer : startTimer,
               style: ElevatedButton.styleFrom(
-                backgroundColor: isRunning ? Colors.red : const Color(0xFF167BCE),
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                backgroundColor: isRunning ? Colors.red : const Color.fromARGB(255, 22, 123, 206),
+                padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 10),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -239,6 +240,28 @@ class _TimerScreenState extends State<TimerScreen> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+            ),
+            const SizedBox(height: 40),
+            Column(
+              children: [
+                const Text(
+                  'Tiempo total de estudio',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Color.fromARGB(255, 22, 123, 206),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  formatFullTime(totalTimeStudied),
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(255, 37, 37, 37),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
